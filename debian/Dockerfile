@@ -1,21 +1,20 @@
-FROM openjdk:14-jdk-alpine
+FROM openjdk:11-buster
 
 # see https://github.com/docker-library/openjdk/issues/73
-ENV LC_CTYPE en_US.UTF-8
+ENV LC_CTYPE C.UTF-8
 
-RUN addgroup -S dtcgroup && adduser -S dtcuser -G dtcgroup
+RUN addgroup --system dtcgroup && adduser --system dtcuser --ingroup dtcgroup
 
-RUN apk update && apk add --no-cache build-base
+RUN apt-get update && apt-get install -y --no-install-recommends  build-essential
 
 RUN	echo "add needed tools" && \
-    apk add --no-cache curl wget zip unzip git bash --virtual build-dependencies build-base\
+    apt-get install -y --no-install-recommends curl wget zip unzip git bash \
     git \
     graphviz \
     python \
     ruby-dev \
-    py-pygments \
-    libc6-compat \
-    ttf-dejavu 
+    python3-pygments \
+    ttf-dejavu
 RUN gem update --system  --no-rdoc --no-ri
 RUN gem install rdoc --no-document 
 RUN gem install pygments.rb
